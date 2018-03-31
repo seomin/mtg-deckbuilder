@@ -1,0 +1,12 @@
+.cardstack {
+    width: 312px;
+}
+
+.cardstack img {
+    width: 312px;
+}
+
+.crop {
+  height: 50px;
+  overflow: hidden;
+}
