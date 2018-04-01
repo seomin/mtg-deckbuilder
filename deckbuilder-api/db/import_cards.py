@@ -2,7 +2,7 @@ import json
 import os
 from db.card_dao import CardDao
 
-dao = CardDao()
+dao = CardDao("deckbuilder_db")
 mci_base_url = "https://magiccards.info/scans/en/"
 
 

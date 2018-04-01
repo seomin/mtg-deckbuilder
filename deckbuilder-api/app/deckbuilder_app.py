@@ -30,7 +30,7 @@ def get_deck(deck_id):
     return jsonify(_deck)
 
 
-@app.route('deck/<deck_id>/card', methods=['POST'])
+@app.route('/deck/<deck_id>/card', methods=['POST'])
 def add_card_to_deck(deck_id):
     card_id = request.form["card_id"]
     dao.add_card(deck_id, card_id)
