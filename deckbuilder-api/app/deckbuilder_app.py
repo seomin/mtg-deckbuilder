@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db.card_dao import CardDao
-import uuid
 # from db.import_cards import import_cards
+from errors.errors import DeckNotFoundError
 
 app = Flask(__name__)
 CORS(app)
@@ -31,8 +31,10 @@ def get_decks():
 
 @app.route('/deck/<deck_id>')
 def get_deck(deck_id):
-    _deck = dao.get_deck(deck_id)
-    # TODO handle case if deck is not found
+    try:
+        _deck = dao.get_deck(deck_id)
+    except DeckNotFoundError as e:
+        return "Could not find deck with id " + e.deck_id, 404
     return jsonify(_deck)
 
 
