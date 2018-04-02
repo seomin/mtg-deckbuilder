@@ -1,7 +1,10 @@
+import uuid
+
 from pymongo import MongoClient
 import re
 
 from db.entities.deck_entity import DeckEntity
+from errors.errors import DeckNotFoundError
 
 
 class CardDao:
@@ -12,9 +15,6 @@ class CardDao:
         self._all_cards = self._db.all_cards
         self._decks = self._db.decks
 
-    def save_card(self, card):
-        self._all_cards.insert_one(card)
-
     def drop_db(self):
         self._client.drop_database(self.db_name)
 
@@ -24,17 +24,33 @@ class CardDao:
     def drop_decks(self):
         self._decks.drop()
 
-    def create_deck(self, _id, name):
-        new_deck = DeckEntity(_id, name)
-        self._decks.insert_one(new_deck.__dict__)
+    def save_card(self, card):
+        self._all_cards.insert_one(card)
 
     def search_cards(self, search):
         cards = self._all_cards.find({"name": re.compile(search, re.IGNORECASE)}, {"_id": 0})
         return list(cards)
 
-    def get_deck(self, _id):
-        deck = self._decks.find_one({"id": _id})
+    def create_deck(self, name):
+        deck_id = uuid.uuid4()
+        new_deck = DeckEntity(deck_id, name)
+        self._decks.insert_one(new_deck.__dict__)
+        return deck_id
+
+    def get_deck(self, deck_id):
+        deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
         return deck
+
+    def delete_deck(self, deck_id):
+        self._decks.delete_one({"id": deck_id})
+
+    def add_card(self, deck_id, card_id):
+        deck = self._decks.find_one({"id": deck_id})
+        cards = list(deck["cards"])
+        cards.append({"id": card_id})
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
 
     def delete_card_from_deck(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
@@ -50,12 +66,3 @@ class CardDao:
         del(cards[card_index])
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
         return card
-
-    def add_card(self, deck_id, card_id):
-        deck = self._decks.find_one({"id": deck_id})
-        cards = list(deck["cards"])
-        cards.append({"id": card_id})
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
-
-    def delete_deck(self, deck_id):
-        self._decks.delete_one({"id": deck_id})
