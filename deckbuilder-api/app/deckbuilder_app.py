@@ -17,11 +17,16 @@ def search_card():
 
 
 @app.route('/deck', methods=['POST'])
-def deck():
-    _id = uuid.uuid4()
+def create_deck():
     name = request.args.get("name")
-    dao.create_deck(_id, name)
-    return _id
+    deck_id = dao.create_deck(name)
+    return deck_id
+
+
+@app.route('/deck')
+def get_decks():
+    _decks = dao.get_decks()
+    return jsonify(_decks)
 
 
 @app.route('/deck/<deck_id>')

@@ -21,6 +21,16 @@ class TestCardDao(unittest.TestCase):
         self.assertEqual(name, deck["name"], "wrong name")
         self.assertEqual(deck_id, deck["id"], "wrong id")
 
+    @unittest.skip("Not yet implemented")
+    def test_get_decks(self):
+        name1 = "Riddledeck"
+        self.dao.create_deck(name1)
+        name2 = "Mardu Moon"
+        self.dao.create_deck(name2)
+
+        decks = self.dao.get_decks()
+        self.assertEqual(2, len(decks))
+
     def test_get_nonexisting_deck(self):
         deck_id = "some_id"
         with self.assertRaises(DeckNotFoundError):

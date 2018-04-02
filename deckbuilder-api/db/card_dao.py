@@ -37,20 +37,8 @@ class CardDao:
         self._decks.insert_one(new_deck.__dict__)
         return deck_id
 
-    def get_deck(self, deck_id):
-        deck = self._decks.find_one({"id": deck_id})
-        if deck is None:
-            raise DeckNotFoundError(deck_id)
-        return deck
-
-    def delete_deck(self, deck_id):
-        self._decks.delete_one({"id": deck_id})
-
-    def add_card(self, deck_id, card_id):
-        deck = self._decks.find_one({"id": deck_id})
-        cards = list(deck["cards"])
-        cards.append({"id": card_id})
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
+    def get_decks(self):
+        pass
 
     def delete_card_from_deck(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
@@ -66,3 +54,18 @@ class CardDao:
         del(cards[card_index])
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
         return card
+
+    def get_deck(self, deck_id):
+        deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        return deck
+
+    def delete_deck(self, deck_id):
+        self._decks.delete_one({"id": deck_id})
+
+    def add_card(self, deck_id, card_id):
+        deck = self._decks.find_one({"id": deck_id})
+        cards = list(deck["cards"])
+        cards.append({"id": card_id})
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
