@@ -28,3 +28,29 @@ export function searchCards(searchString) {
       })
   }
 }
+
+export const RECEIVED_DECKS = 'RECEIVED_DECKS'
+function receivedDecks(decks) {
+  return { type: RECEIVED_DECKS, decks }
+}
+
+export function fetchDecks() {
+  return dispatch => {
+    API.fetchDecks()
+      .then(result => {
+        return result.json()
+      })
+      .then(decks => {
+        dispatch(receivedDecks(decks))
+      })
+  }
+}
+
+export function createDeck(name) {
+  return dispatch => {
+    API.createDeck(name)
+      .then(() => {
+        dispatch(fetchDecks())
+      })
+  }
+}

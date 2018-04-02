@@ -1,0 +1,12 @@
+.header {
+    padding: 45px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}

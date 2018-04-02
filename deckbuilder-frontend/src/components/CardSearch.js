@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { searchCards } from '../state/actions'
 import CardStack from './CardStack'
+import "../styles/CardSearch.css"
 
 class _CardSearch extends Component {
 
@@ -14,7 +15,7 @@ class _CardSearch extends Component {
 
   render() {
     return (
-      <div>
+      <div className="cardsearch">
         <form onSubmit={this.search} >
           <label>
             Search for card by name:

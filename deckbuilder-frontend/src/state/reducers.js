@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 import {
   SEARCHING_CARD,
-  FOUND_CARDS
+  FOUND_CARDS,
+  RECEIVED_DECKS
 } from './actions'
 
 const CARD_BACK = process.env.REACT_APP_API_BASE_URL + "/static/card_back.jpg"
@@ -18,6 +19,19 @@ function searchedCards(state = {searching: false, cards: NO_CARDS}, action) {
   }
 }
 
-const rootReducer = combineReducers({ searchedCards })
+function decks(state = [], action) {
+  switch (action.type) {
+    case RECEIVED_DECKS:
+      return action.decks
+      break;
+    default:
+      return state
+  }
+}
+
+const rootReducer = combineReducers({
+  searchedCards,
+  decks
+})
 
 export default rootReducer
