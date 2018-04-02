@@ -27,7 +27,13 @@ def deck():
 @app.route('/deck/<deck_id>')
 def get_deck(deck_id):
     _deck = dao.get_deck(deck_id)
+    # TODO handle case if deck is not found
     return jsonify(_deck)
+
+
+@app.route('/deck/<deck_id>', methods=['POST'])
+def delete_deck(deck_id):
+    dao.delete_deck(deck_id)
 
 
 @app.route('/deck/<deck_id>/card', methods=['POST'])

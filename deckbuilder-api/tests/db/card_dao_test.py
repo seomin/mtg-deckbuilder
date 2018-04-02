@@ -27,3 +27,13 @@ class TestCardDao(unittest.TestCase):
         deck = self.dao.get_deck(deck_id)
         cards = deck["cards"]
         self.assertEqual(1, len(cards))
+
+    @unittest.skip("Not yet implemented")
+    def test_delete_deck(self):
+        deck_id = uuid.uuid4()
+        name = "Mardu Moon"
+        self.dao.create_deck(deck_id, name)
+        self.dao.delete_deck(deck_id)
+
+        deck = self.dao.get_deck(deck_id)
+        self.assertIsNone(deck, "deck was still found after deletion")

@@ -38,3 +38,6 @@ class CardDao:
         cards = list(deck["cards"])
         cards.append({"id": card_id})
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
+
+    def delete_deck(self, deck_id):
+        pass
