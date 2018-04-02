@@ -54,3 +54,27 @@ export function createDeck(name) {
       })
   }
 }
+
+export const SELECTING_DECK = 'SELECTING_DECK'
+function selectingDeck(deckId) {
+  return { type: SELECTING_DECK, deckId }
+}
+
+export const RECEIVED_DECK = 'RECEIVED_DECK'
+function receivedDeck(deck) {
+  return { type: RECEIVED_DECK, deck }
+}
+
+export function selectDeck(deckId) {
+  return dispatch => {
+    dispatch(selectingDeck(deckId))
+
+    API.fetchDeck(deckId)
+      .then(result => {
+        return result.json()
+      })
+      .then((data) => {
+        dispatch(receivedDeck(data))
+      })
+  }
+}

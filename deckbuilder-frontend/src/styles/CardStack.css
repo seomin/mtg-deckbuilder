@@ -1,9 +1,10 @@
 .cardstack {
-    width: 312px;
+    width: 322px;
 }
 
 .cardstack img {
     width: 312px;
+    padding: 5px;
 }
 
 .crop {

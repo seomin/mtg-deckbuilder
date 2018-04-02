@@ -20,7 +20,7 @@ def search_card():
 def create_deck():
     name = request.form["name"]
     deck_id = dao.create_deck(name)
-    return deck_id
+    return jsonify(deck_id)
 
 
 @app.route('/deck')
@@ -60,6 +60,7 @@ def delete_card_from_deck(deck_id, card_id):
 
 
 def run():
+    # dao.drop_db()
     # import_cards("AllSets-x.json", dao)
     app.run()
 

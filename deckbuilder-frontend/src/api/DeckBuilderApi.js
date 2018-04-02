@@ -24,12 +24,18 @@ export default class DeckBuilderApi {
 		})
   }
 
+  fetchDeck(deckId) {
+    return fetch(this.baseUrl + "/deck/" + deckId, {
+			method: 'GET',
+			headers: this.defaultHeaders()
+		})
+  }
+
   createDeck(name) {
     const formData = new FormData()
     formData.append("name", name)
     return fetch(this.baseUrl + "/deck", {
 			method: 'POST',
-			headers: this.defaultHeaders(),
       body: formData
 		})
   }

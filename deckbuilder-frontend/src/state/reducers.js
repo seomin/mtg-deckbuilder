@@ -2,7 +2,9 @@ import { combineReducers } from 'redux'
 import {
   SEARCHING_CARD,
   FOUND_CARDS,
-  RECEIVED_DECKS
+  RECEIVED_DECKS,
+  SELECTING_DECK,
+  RECEIVED_DECK
 } from './actions'
 
 const CARD_BACK = process.env.REACT_APP_API_BASE_URL + "/static/card_back.jpg"
@@ -19,11 +21,14 @@ function searchedCards(state = {searching: false, cards: NO_CARDS}, action) {
   }
 }
 
-function decks(state = [], action) {
+function decks(state = {userDecks: [], selectedDeck: null, fetching: false}, action) {
   switch (action.type) {
     case RECEIVED_DECKS:
-      return action.decks
-      break;
+      return Object.assign({}, state, { userDecks: action.decks })
+    case RECEIVED_DECK:
+      return Object.assign({}, state, { selectedDeck: action.deck })
+    case SELECTING_DECK:
+      return Object.assign( {}, state, { fetching: true })
     default:
       return state
   }

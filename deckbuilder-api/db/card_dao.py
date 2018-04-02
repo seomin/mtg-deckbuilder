@@ -32,13 +32,14 @@ class CardDao:
         return list(cards)
 
     def create_deck(self, name):
-        deck_id = uuid.uuid4()
+        deck_id = str(uuid.uuid4())
+        # TODO Handle duplicate name
         new_deck = DeckEntity(deck_id, name)
         self._decks.insert_one(new_deck.__dict__)
         return deck_id
 
     def get_decks(self):
-        decks = self._decks.find({})
+        decks = self._decks.find({}, {"_id": 0})
         return list(decks)
 
     def delete_card_from_deck(self, deck_id, card_id):
@@ -62,7 +63,7 @@ class CardDao:
         return card
 
     def get_deck(self, deck_id):
-        deck = self._decks.find_one({"id": deck_id})
+        deck = self._decks.find_one({"id": deck_id}, {"_id": 0})
         if deck is None:
             raise DeckNotFoundError(deck_id)
         return deck
