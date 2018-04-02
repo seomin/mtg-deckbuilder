@@ -21,7 +21,7 @@ class TestCardDao(unittest.TestCase):
         self.assertEqual(name, deck["name"], "wrong name")
         self.assertEqual(deck_id, deck["id"], "wrong id")
 
-    @unittest.skip("Not yet implemented")
+    #@unittest.skip("Not yet implemented")
     def test_get_decks(self):
         name1 = "Riddledeck"
         self.dao.create_deck(name1)
@@ -60,7 +60,6 @@ class TestCardDao(unittest.TestCase):
         with self.assertRaises(DeckNotFoundError, msg="deck was not deleted"):
             self.dao.get_deck(deck_id)
 
-    @unittest.skip("Not yet implemented")
     def test_delete_nonexisting_deck(self):
         deck_id = "some_id"
         with self.assertRaises(DeckNotFoundError):
@@ -81,7 +80,6 @@ class TestCardDao(unittest.TestCase):
         cards = deck["cards"]
         self.assertEqual(0, len(cards))
 
-    @unittest.skip("Not yet implemented")
     def test_delete_nonexisting_card_from_deck(self):
         name = "Mardu Moon"
         deck_id = self.dao.create_deck(name)

@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import re
 
 from db.entities.deck_entity import DeckEntity
-from errors.errors import DeckNotFoundError
+from errors.errors import DeckNotFoundError, CardNotFoundError
 
 
 class CardDao:
@@ -38,7 +38,8 @@ class CardDao:
         return deck_id
 
     def get_decks(self):
-        pass
+        decks = self._decks.find({})
+        return list(decks)
 
     def delete_card_from_deck(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
@@ -49,7 +50,7 @@ class CardDao:
                 card_index = index
                 break
         if card_index is None:
-            return None
+            raise CardNotFoundError(card_id)
         card = cards[card_index]
         del(cards[card_index])
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
@@ -62,7 +63,10 @@ class CardDao:
         return deck
 
     def delete_deck(self, deck_id):
+        deck = self._decks.find_one({"id": deck_id})
         self._decks.delete_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
 
     def add_card(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
