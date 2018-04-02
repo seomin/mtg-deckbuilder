@@ -1,5 +1,9 @@
 .cardsearch {
-    flex: 25%;
+    flex: 13%;
     background-color: #f1f1f1;
     padding: 20px;
+}
+
+.cardsearch form {
+  padding-bottom: 10px;
 }

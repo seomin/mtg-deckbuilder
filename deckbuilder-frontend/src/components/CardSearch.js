@@ -17,10 +17,7 @@ class _CardSearch extends Component {
     return (
       <div className="cardsearch">
         <form onSubmit={this.search} >
-          <label>
-            Search for card by name:
-            <input type="text" value={this.state.searchString} onChange={this.updateSearchString} />
-          </label>
+          <input type="text" placeholder="Search for card by name" value={this.state.searchString} onChange={this.updateSearchString} />
           <input type="submit" value="Search" />
         </form>
 

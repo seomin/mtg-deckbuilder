@@ -9,6 +9,7 @@ export default function CardStack(props) {
         return (
           <div key={index} className={index === imgCount - 1 ? "cardstack" : "cardstack crop"}>
             <img src={card.url} alt={card.name} />
+            <img src={card.url} alt={card.name} className="tooltiptext" />
           </div>
         );
       })}

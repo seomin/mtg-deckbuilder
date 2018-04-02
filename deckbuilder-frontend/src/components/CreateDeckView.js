@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { createDeck } from '../state/actions'
+import "../styles/CreateDeckView.css"
 
 
 class _CreateDeckView extends Component {
@@ -11,12 +12,9 @@ class _CreateDeckView extends Component {
 
   render() {
     return (
-      <div>
+      <div className="createdeck" >
         <form onSubmit={this.createDeck}>
-          <label>
-            Create a new deck with name:
-            <input type="text" value={this.state.newDeckName} onChange={this.updateNewDeckName} />
-          </label>
+          <input type="text" placeholder="New Deck Name" value={this.state.newDeckName} onChange={this.updateNewDeckName} />
           <input type="submit" value="Create Deck" />
         </form>
       </div>
