@@ -1,6 +1,5 @@
 .cardstack {
     width: 210px;
-    position: relative;
 }
 
 .cardstack img {
@@ -13,8 +12,12 @@
   overflow: hidden;
 }
 
+.tooltip {
+  position: relative;
+}
+
 /* Tooltip text */
-.cardstack .tooltiptext {
+.tooltip .tooltiptext {
    visibility: hidden;
    width: 312px;
    padding: 5px 0;
@@ -27,8 +30,16 @@
    left: 105%;
 }
 
+.tooltip .tooltiptextuncropped {
+   bottom: -75px;
+}
+
+.tooltip .tooltiptextcropped {
+   bottom: -310px;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
-.cardstack:hover .tooltiptext {
+.tooltip:hover .tooltiptext {
    visibility: visible;
    opacity: 1;
 }

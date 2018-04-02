@@ -7,9 +7,11 @@ export default function CardStack(props) {
     <div>
       {props.cards.map((card, index) => {
         return (
-          <div key={index} className={index === imgCount - 1 ? "cardstack" : "cardstack crop"}>
-            <img src={card.url} alt={card.name} />
-            <img src={card.url} alt={card.name} className="tooltiptext" />
+          <div className="tooltip">
+            <div key={index} className={"cardstack" + (index === imgCount - 1 ? "" : " crop")}>
+              <img src={card.url} alt={card.name} />
+            </div>
+            <img src={card.url} alt="" className={"tooltiptext " + (index === imgCount - 1 ? "tooltiptextuncropped" : " tooltiptextcropped")} />
           </div>
         );
       })}
