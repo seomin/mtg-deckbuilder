@@ -31,15 +31,25 @@ def get_deck(deck_id):
     return jsonify(_deck)
 
 
-@app.route('/deck/<deck_id>', methods=['POST'])
+@app.route('/deck/<deck_id>', methods=['DELETE'])
 def delete_deck(deck_id):
+    # TODO handle case if deck is not found
     dao.delete_deck(deck_id)
 
 
 @app.route('/deck/<deck_id>/card', methods=['POST'])
 def add_card_to_deck(deck_id):
+    # TODO handle case if card is not found
     card_id = request.form["card_id"]
     dao.add_card(deck_id, card_id)
+
+
+@app.route('/deck/<deck_id>/card/<card_id>', methods=['DELETE'])
+def delete_card_from_deck(deck_id, card_id):
+    # TODO handle case if card is not found
+    deck_id = request.form["deck_id"]
+    card_id = request.form["card_id"]
+    dao.delete_card_from_deck(deck_id, card_id)
 
 
 def run():
