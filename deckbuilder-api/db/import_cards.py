@@ -2,17 +2,16 @@ import json
 import os
 from db.card_dao import CardDao
 
-dao = CardDao("deckbuilder_db")
 mci_base_url = "https://magiccards.info/scans/en/"
 
 
-def import_cards():
+def import_cards(file_name, dao):
     print("Dropping all cards...")
     dao.drop_cards()
 
     print("Loading cards from json file...")
     script_dir = os.path.dirname(__file__)
-    rel_path = "../cards/AllSets-x.json"
+    rel_path = "../cards/" + file_name
     abs_file_path = os.path.join(script_dir, rel_path)
     file = open(abs_file_path, encoding="UTF-8")
     data = json.load(file)

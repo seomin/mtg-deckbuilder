@@ -60,6 +60,6 @@ def delete_card_from_deck(deck_id, card_id):
 
 
 def run():
-    # import_cards()
+    # import_cards("AllSets-x.json", dao)
     app.run()
 

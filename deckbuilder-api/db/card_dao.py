@@ -70,6 +70,11 @@ class CardDao:
 
     def add_card(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        card = self._all_cards.find_one({"id": card_id})
+        if card is None:
+            raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
         cards.append({"id": card_id})
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})

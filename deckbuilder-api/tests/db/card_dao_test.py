@@ -1,6 +1,7 @@
 import unittest
 
 from db.card_dao import CardDao
+from db.import_cards import import_cards
 from errors.errors import DeckNotFoundError, CardNotFoundError
 
 
@@ -9,6 +10,10 @@ class TestCardDao(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dao = CardDao("test_db")
+        import_cards("XLN-x.json", cls.dao)
+
+    @classmethod
+    def tearDownClass(cls):
         cls.dao.drop_db()
 
     def tearDown(self):
@@ -21,7 +26,6 @@ class TestCardDao(unittest.TestCase):
         self.assertEqual(name, deck["name"], "wrong name")
         self.assertEqual(deck_id, deck["id"], "wrong id")
 
-    #@unittest.skip("Not yet implemented")
     def test_get_decks(self):
         name1 = "Riddledeck"
         self.dao.create_deck(name1)
@@ -39,17 +43,25 @@ class TestCardDao(unittest.TestCase):
     def test_add_card_to_deck(self):
         name = "Mardu Moon"
         deck_id = self.dao.create_deck(name)
-        card_id = "7788a85c7b2c420ad75719fe9a0e2e71a5eddc5e"
+
+        # card_id is from Vona, Butcher of Magan
+        card_id = "aa882bc018277cc70b06e643cd963360e590cc02"
         self.dao.add_card(deck_id, card_id)
         deck = self.dao.get_deck(deck_id)
         cards = deck["cards"]
         self.assertEqual(1, len(cards))
 
-    @unittest.skip("Not yet implemented")
     def test_add_card_to_nonexisting_deck(self):
         deck_id = "some_id"
         card_id = "7788a85c7b2c420ad75719fe9a0e2e71a5eddc5e"
         with self.assertRaises(DeckNotFoundError):
+            self.dao.add_card(deck_id, card_id)
+
+    def test_add_nonexisting_card_to_deck(self):
+        name = "Riddledeck"
+        deck_id = self.dao.create_deck(name)
+        card_id = "123"
+        with self.assertRaises(CardNotFoundError):
             self.dao.add_card(deck_id, card_id)
 
     def test_delete_deck(self):
@@ -68,7 +80,9 @@ class TestCardDao(unittest.TestCase):
     def test_delete_card_from_deck(self):
         name = "Mardu Moon"
         deck_id = self.dao.create_deck(name)
-        card_id = "7788a85c7b2c420ad75719fe9a0e2e71a5eddc5e"
+
+        # card_id is from Vona, Butcher of Magan
+        card_id = "aa882bc018277cc70b06e643cd963360e590cc02"
         self.dao.add_card(deck_id, card_id)
 
         deck = self.dao.get_deck(deck_id)
