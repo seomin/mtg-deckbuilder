@@ -42,8 +42,11 @@ class CardDao:
         return list(decks)
 
     def delete_card_from_deck(self, deck_id, card_id):
+        # First finding the deck
         deck = self._decks.find_one({"id": deck_id})
         cards = list(deck["cards"])
+
+        # Finding the card
         card_index = None
         for index, card in enumerate(cards):
             if card["id"] == card_id:
@@ -51,6 +54,8 @@ class CardDao:
                 break
         if card_index is None:
             raise CardNotFoundError(card_id)
+
+        # Card exists, update it
         card = cards[card_index]
         del(cards[card_index])
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})

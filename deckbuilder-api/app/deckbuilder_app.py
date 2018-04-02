@@ -18,7 +18,7 @@ def search_card():
 
 @app.route('/deck', methods=['POST'])
 def create_deck():
-    name = request.args.get("name")
+    name = request.form["name"]
     deck_id = dao.create_deck(name)
     return deck_id
 
