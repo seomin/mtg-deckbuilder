@@ -3,6 +3,7 @@ import { DragSource } from 'react-dnd'
 import { ItemTypes } from "../constants/Constants"
 import "../styles/Card.css"
 
+// DragSource
 const cardSource = {
   beginDrag(props) {
     const item = { cardId: props.card.id }
@@ -22,6 +23,7 @@ function collect(connect, monitor) {
   }
 }
 
+// Rendering
 function renderDraggingCard(props) {
   return (
     <div >
@@ -60,4 +62,5 @@ class Card extends Component {
   }
 }
 
+// Wrapping
 export default DragSource(ItemTypes.CARD, cardSource, collect)(Card)

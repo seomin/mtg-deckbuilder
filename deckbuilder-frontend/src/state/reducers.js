@@ -4,7 +4,8 @@ import {
   FOUND_CARDS,
   RECEIVED_DECKS,
   SELECTING_DECK,
-  RECEIVED_DECK
+  RECEIVED_DECK,
+  ADDING_CARD_TO_DECK
 } from './actions'
 
 const CARD_BACK = process.env.REACT_APP_API_BASE_URL + "/static/card_back.jpg"
@@ -26,8 +27,10 @@ function decks(state = {userDecks: [], selectedDeck: null, fetching: false}, act
     case RECEIVED_DECKS:
       return Object.assign({}, state, { userDecks: action.decks })
     case RECEIVED_DECK:
-      return Object.assign({}, state, { selectedDeck: action.deck })
+      return Object.assign({}, state, { selectedDeck: action.deck, fetching: false })
     case SELECTING_DECK:
+      return Object.assign( {}, state, { fetching: true })
+    case ADDING_CARD_TO_DECK:
       return Object.assign( {}, state, { fetching: true })
     default:
       return state

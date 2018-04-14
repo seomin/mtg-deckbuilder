@@ -78,3 +78,25 @@ export function selectDeck(deckId) {
       })
   }
 }
+
+export const ADDING_CARD_TO_DECK = 'ADDING_CARD_TO_DECK'
+function addingCardToDeck(deckId) {
+  return { type: ADDING_CARD_TO_DECK, deckId }
+}
+
+export function addCardToDeck(cardId, deckId) {
+  return dispatch => {
+    dispatch(addingCardToDeck(deckId))
+
+    API.addCardToDeck(cardId, deckId)
+      .then(result => {
+        return API.fetchDeck(deckId)
+      })
+      .then(result => {
+        return result.json()
+      })
+      .then((data) => {
+        dispatch(receivedDeck(data))
+      })
+  }
+}

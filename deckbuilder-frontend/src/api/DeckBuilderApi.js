@@ -39,4 +39,13 @@ export default class DeckBuilderApi {
       body: formData
 		})
   }
+
+  addCardToDeck(cardId, deckId) {
+    const formData = new FormData()
+    formData.append("card_id", cardId)
+    return fetch(this.baseUrl + "/deck/" + deckId + "/card", {
+			method: 'POST',
+      body: formData
+		})
+  }
 }
