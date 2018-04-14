@@ -59,7 +59,13 @@ class CardDao:
         # Card exists, update it
         card = cards[card_index]
         del(cards[card_index])
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
+
+        cmc = deck["cmc_distribution"]
+        cmc_card = card["cmc"]
+        cmc_count = cmc.get(str(cmc_card), 0)
+        cmc[str(cmc_card)] = cmc_count - 1
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
         return card
 
     def get_deck(self, deck_id):
@@ -82,7 +88,7 @@ class CardDao:
         if card is None:
             raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
-        cards.append({"id": card_id})
+        cards.append({"id": card_id, "cmc": card["cmc"]})
 
         cmc = deck["cmc_distribution"]
         cmc_card = card["cmc"]
