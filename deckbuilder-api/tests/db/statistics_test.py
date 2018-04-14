@@ -23,9 +23,9 @@ class TestStatistics(unittest.TestCase):
 
         # Kitesail Freebooter
         self.card_id3 = "694cea4c33b1339bc798cc2b56f83e273c57cc11"
-        self.dao.add_card(self.deck_id, self.card_id1)
-        self.dao.add_card(self.deck_id, self.card_id2)
-        self.dao.add_card(self.deck_id, self.card_id3)
+        self.dao.add_card_to_deck(self.deck_id, self.card_id1)
+        self.dao.add_card_to_deck(self.deck_id, self.card_id2)
+        self.dao.add_card_to_deck(self.deck_id, self.card_id3)
 
     def tearDown(self):
         self.dao.drop_decks()
@@ -43,7 +43,7 @@ class TestStatistics(unittest.TestCase):
         cmc_count = cmc.get("5", 0)
         self.assertEqual(1, cmc_count)
 
-        self.dao.add_card(self.deck_id, new_card_id)
+        self.dao.add_card_to_deck(self.deck_id, new_card_id)
 
         deck = self.dao._decks.find_one({"id": self.deck_id})
         cmc = deck["cmc_distribution"]

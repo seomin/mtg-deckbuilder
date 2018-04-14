@@ -76,11 +76,12 @@ class CardDao:
 
     def delete_deck(self, deck_id):
         deck = self._decks.find_one({"id": deck_id})
-        self._decks.delete_one({"id": deck_id})
         if deck is None:
             raise DeckNotFoundError(deck_id)
+        self._decks.delete_one({"id": deck_id})
+        return deck
 
-    def add_card(self, deck_id, card_id):
+    def add_card_to_deck(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
         if deck is None:
             raise DeckNotFoundError(deck_id)

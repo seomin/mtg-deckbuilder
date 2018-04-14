@@ -46,7 +46,7 @@ class TestCardDao(unittest.TestCase):
 
         # card_id is from Vona, Butcher of Magan
         card_id = "aa882bc018277cc70b06e643cd963360e590cc02"
-        self.dao.add_card(deck_id, card_id)
+        self.dao.add_card_to_deck(deck_id, card_id)
         deck = self.dao.get_deck(deck_id)
         cards = deck["cards"]
         self.assertEqual(1, len(cards))
@@ -55,14 +55,14 @@ class TestCardDao(unittest.TestCase):
         deck_id = "some_id"
         card_id = "7788a85c7b2c420ad75719fe9a0e2e71a5eddc5e"
         with self.assertRaises(DeckNotFoundError):
-            self.dao.add_card(deck_id, card_id)
+            self.dao.add_card_to_deck(deck_id, card_id)
 
     def test_add_nonexisting_card_to_deck(self):
         name = "Riddledeck"
         deck_id = self.dao.create_deck(name)
         card_id = "123"
         with self.assertRaises(CardNotFoundError):
-            self.dao.add_card(deck_id, card_id)
+            self.dao.add_card_to_deck(deck_id, card_id)
 
     def test_delete_deck(self):
         name = "Mardu Moon"
@@ -83,7 +83,7 @@ class TestCardDao(unittest.TestCase):
 
         # card_id is from Vona, Butcher of Magan
         card_id = "aa882bc018277cc70b06e643cd963360e590cc02"
-        self.dao.add_card(deck_id, card_id)
+        self.dao.add_card_to_deck(deck_id, card_id)
 
         deck = self.dao.get_deck(deck_id)
         cards = deck["cards"]
