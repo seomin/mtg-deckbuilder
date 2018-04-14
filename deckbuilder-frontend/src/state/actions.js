@@ -22,7 +22,7 @@ export function searchCards(searchString) {
       })
       .then(json => {
         const cards = json.map(card => {
-          return { url: card["mciUrl"], name: card["name"] }
+          return { id: card["id"], url: card["mciUrl"], name: card["name"] }
         })
         dispatch(foundCards(cards))
       })

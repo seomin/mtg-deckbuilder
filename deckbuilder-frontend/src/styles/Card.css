@@ -1,8 +1,8 @@
-.cardstack {
+.card {
     width: 210px;
 }
 
-.cardstack img {
+.card img {
     width: 200px;
     padding: 5px;
 }
@@ -35,7 +35,7 @@
 }
 
 .tooltip .tooltiptextcropped {
-   bottom: -310px;
+   bottom: -325px;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */

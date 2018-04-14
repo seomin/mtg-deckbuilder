@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { fetchDecks, selectDeck } from '../state/actions'
 
 
-class _DeckSelector extends Component {
+class DeckSelector extends Component {
 
   componentDidMount() {
     this.props.fetchDecks()
@@ -44,9 +44,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const DeckSelector = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(_DeckSelector)
-
-export default DeckSelector
+)(DeckSelector)

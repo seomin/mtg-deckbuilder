@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 
-function _DeckView(props) {
+function DeckView(props) {
   if (props.deck === null) {
     return null
   }
@@ -23,8 +23,7 @@ const mapDispatchToProps = (dispatch) => {
   return {}
 }
 
-const DeckView = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(_DeckView)
-export default DeckView
+)(DeckView)

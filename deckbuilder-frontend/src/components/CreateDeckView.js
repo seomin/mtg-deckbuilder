@@ -4,7 +4,7 @@ import { createDeck } from '../state/actions'
 import "../styles/CreateDeckView.css"
 
 
-class _CreateDeckView extends Component {
+class CreateDeckView extends Component {
   constructor(props) {
     super(props)
     this.state = {newDeckName: ""}
@@ -43,9 +43,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const CreateDeckView = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(_CreateDeckView)
-
-export default CreateDeckView
+)(CreateDeckView)

@@ -4,7 +4,7 @@ import { searchCards } from '../state/actions'
 import CardStack from './CardStack'
 import "../styles/CardSearch.css"
 
-class _CardSearch extends Component {
+class CardSearch extends Component {
 
   constructor(props) {
       super(props)
@@ -48,9 +48,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const CardSearch = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(_CardSearch)
-
-export default CardSearch
+)(CardSearch)
