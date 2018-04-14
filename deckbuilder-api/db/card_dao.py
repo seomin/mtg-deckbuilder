@@ -66,7 +66,7 @@ class CardDao:
         if card is None:
             raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
-        new_card = CardEntity(card_id, card["mciUrl"], card["cmc"])
+        new_card = CardEntity(card_id, card["name"], card["mciUrl"], card["cmc"])
         cards.append(new_card.__dict__)
 
         # Update the CMC distribution

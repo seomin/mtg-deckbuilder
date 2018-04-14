@@ -1,6 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import { DropTarget } from 'react-dnd'
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from "recharts"
 import { ItemTypes } from "../constants/Constants"
 import { addCardToDeck } from '../state/actions'
 import "../styles/DeckView.css"
@@ -23,6 +24,15 @@ function collect(connect, monitor) {
   }
 }
 
+function createData(oldCmc) {
+  var cmcList = []
+  console.log(oldCmc)
+  for (const [cmc, count] of Object.entries(oldCmc)) {
+    cmcList.push({cmc: cmc, count: count})
+  }
+  return cmcList
+}
+
 function DeckView(props) {
   if (props.deck === null) {
     return null
@@ -30,9 +40,17 @@ function DeckView(props) {
   return props.connectDropTarget(
     <div>
       <h2>{props.deck.name}</h2>
+
+      <BarChart width={400} height={200} data={createData(props.deck.cmcDistribution)}>
+        <XAxis dataKey="cmc" />
+        <YAxis />
+        <Bar type="monotone" dataKey="count" barSize={60} fill="#8884d8"/>
+        <Tooltip />
+      </BarChart>
+
       <div className="deckview" >
-        {props.deck.cards.map(card => {
-          return (<img src={card.mciUrl} key={card.id} />)
+        {props.deck.cards.map((card, index) => {
+          return (<img src={card.mciUrl} key={index} />)
         })}
       </div>
     </div>
