@@ -26,7 +26,6 @@ function collect(connect, monitor) {
 
 function createData(oldCmc) {
   var cmcList = []
-  console.log(oldCmc)
   for (const [cmc, count] of Object.entries(oldCmc)) {
     cmcList.push({cmc: cmc, count: count})
   }
@@ -50,7 +49,7 @@ function DeckView(props) {
 
       <div className="deckview" >
         {props.deck.cards.map((card, index) => {
-          return (<img src={card.mciUrl} key={index} />)
+          return (<img src={card.mciUrl} alt={card.name} key={index} />)
         })}
       </div>
     </div>
