@@ -28,6 +28,8 @@ class CardDao:
         self._all_cards.insert_one(card)
 
     def search_cards(self, search):
+        if len(search) == 0:
+            return list()
         cards = self._all_cards.find({"name": re.compile(search, re.IGNORECASE)}, {"_id": 0})
         return list(cards)
 
@@ -41,6 +43,36 @@ class CardDao:
     def get_decks(self):
         decks = self._decks.find({}, {"_id": 0})
         return list(decks)
+
+    def get_deck(self, deck_id):
+        deck = self._decks.find_one({"id": deck_id}, {"_id": 0})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        return deck
+
+    def delete_deck(self, deck_id):
+        deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        self._decks.delete_one({"id": deck_id})
+        return deck
+
+    def add_card_to_deck(self, deck_id, card_id):
+        deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        card = self._all_cards.find_one({"id": card_id})
+        if card is None:
+            raise CardNotFoundError(card_id)
+        cards = list(deck["cards"])
+        cards.append({"id": card_id, "cmc": card["cmc"], "mciUrl": card["mciUrl"]})
+
+        cmc = deck["cmc_distribution"]
+        cmc_card = card["cmc"]
+        cmc_count = cmc.get(str(cmc_card), 0)
+        cmc[str(cmc_card)] = cmc_count + 1
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
 
     def delete_card_from_deck(self, deck_id, card_id):
         # First finding the deck
@@ -67,33 +99,3 @@ class CardDao:
 
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
         return card
-
-    def get_deck(self, deck_id):
-        deck = self._decks.find_one({"id": deck_id}, {"_id": 0})
-        if deck is None:
-            raise DeckNotFoundError(deck_id)
-        return deck
-
-    def delete_deck(self, deck_id):
-        deck = self._decks.find_one({"id": deck_id})
-        if deck is None:
-            raise DeckNotFoundError(deck_id)
-        self._decks.delete_one({"id": deck_id})
-        return deck
-
-    def add_card_to_deck(self, deck_id, card_id):
-        deck = self._decks.find_one({"id": deck_id})
-        if deck is None:
-            raise DeckNotFoundError(deck_id)
-        card = self._all_cards.find_one({"id": card_id})
-        if card is None:
-            raise CardNotFoundError(card_id)
-        cards = list(deck["cards"])
-        cards.append({"id": card_id, "cmc": card["cmc"]})
-
-        cmc = deck["cmc_distribution"]
-        cmc_card = card["cmc"]
-        cmc_count = cmc.get(str(cmc_card), 0)
-        cmc[str(cmc_card)] = cmc_count + 1
-
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})

@@ -1,0 +1,10 @@
+.deckview {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.deckview img {
+  width: 200px;
+  padding: 5px;
+}

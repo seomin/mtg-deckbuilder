@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { DropTarget } from 'react-dnd'
 import { ItemTypes } from "../constants/Constants"
 import { addCardToDeck } from '../state/actions'
+import "../styles/DeckView.css"
 
 // DroptTarget
 const deckTarget = {
@@ -29,10 +30,10 @@ function DeckView(props) {
   return props.connectDropTarget(
     <div>
       <h2>{props.deck.name}</h2>
-      <div>
-        Number of cards: {props.deck.cards.length}
-        <p>Is over: {props.isOver ? "yes" : "no"}</p>
-        <p>Is fetching: {props.fetching ? "yes" : "no"}</p>
+      <div className="deckview" >
+        {props.deck.cards.map(card => {
+          return (<img src={card.mciUrl} key={card.id} />)
+        })}
       </div>
     </div>
   )

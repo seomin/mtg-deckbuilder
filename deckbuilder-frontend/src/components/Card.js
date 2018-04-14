@@ -57,7 +57,7 @@ class Card extends Component {
 
   render() {
     return this.props.connectDragSource(
-      this.props.isDragging ? renderDraggingCard(this.props) : renderFullCard(this.props)
+      this.props.isDragging || this.props.card.name === "No match found" ? renderDraggingCard(this.props) : renderFullCard(this.props)
     )
   }
 }
