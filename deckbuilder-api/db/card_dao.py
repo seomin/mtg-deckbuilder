@@ -83,4 +83,10 @@ class CardDao:
             raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
         cards.append({"id": card_id})
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
+
+        cmc = deck["cmc_distribution"]
+        cmc_card = card["cmc"]
+        cmc_count = cmc.get(str(cmc_card), 0)
+        cmc[str(cmc_card)] = cmc_count + 1
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
