@@ -13,23 +13,24 @@ def import_cards(file_name, dao):
     script_dir = os.path.dirname(__file__)
     rel_path = "../cards/" + file_name
     abs_file_path = os.path.join(script_dir, rel_path)
-    file = open(abs_file_path, encoding="UTF-8")
-    data = json.load(file)
 
-    print("Saving cards in database...")
-    for set_name, set_data in data.items():
-        set_cards = set_data["cards"]
-        mci_set = set_data.get("magicCardsInfoCode")
+    with open(abs_file_path, encoding="UTF-8") as file:
+        data = json.load(file)
 
-        for card in set_cards:
-            # Only set mciUrl for cards whose set is available on MCI
-            if mci_set is not None:
-                mci_number = extract_mci_number(card)
-                if mci_number is not None:
-                    card["mciUrl"] = mci_base_url + mci_set + "/" + mci_number + ".jpg"
+        print("Saving cards in database...")
+        for set_name, set_data in data.items():
+            set_cards = set_data["cards"]
+            mci_set = set_data.get("magicCardsInfoCode")
 
-            dao.save_card(card)
-    print("Done.")
+            for card in set_cards:
+                # Only set mciUrl for cards whose set is available on MCI
+                if mci_set is not None:
+                    mci_number = extract_mci_number(card)
+                    if mci_number is not None:
+                        card["mciUrl"] = mci_base_url + mci_set + "/" + mci_number + ".jpg"
+
+                dao.save_card(card)
+        print("Done.")
 
 
 def extract_mci_number(card):

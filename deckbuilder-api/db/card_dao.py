@@ -1,8 +1,9 @@
+import re
 import uuid
 
 from pymongo import MongoClient
-import re
 
+from db.entities.card_entity import CardEntity
 from db.entities.deck_entity import DeckEntity
 from errors.errors import DeckNotFoundError, CardNotFoundError
 
@@ -65,14 +66,16 @@ class CardDao:
         if card is None:
             raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
-        cards.append({"id": card_id, "cmc": card["cmc"], "mciUrl": card["mciUrl"]})
+        new_card = CardEntity(card_id, card["mciUrl"], card["cmc"])
+        cards.append(new_card.__dict__)
 
-        cmc = deck["cmc_distribution"]
+        # Update the CMC distribution
+        cmc = deck["cmcDistribution"]
         cmc_card = card["cmc"]
         cmc_count = cmc.get(str(cmc_card), 0)
         cmc[str(cmc_card)] = cmc_count + 1
 
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc}})
 
     def delete_card_from_deck(self, deck_id, card_id):
         # First finding the deck
@@ -88,14 +91,15 @@ class CardDao:
         if card_index is None:
             raise CardNotFoundError(card_id)
 
-        # Card exists, update it
+        # Card exists, delete it from the list
         card = cards[card_index]
         del(cards[card_index])
 
-        cmc = deck["cmc_distribution"]
+        # Update the CMC distribution
+        cmc = deck["cmcDistribution"]
         cmc_card = card["cmc"]
         cmc_count = cmc.get(str(cmc_card), 0)
         cmc[str(cmc_card)] = cmc_count - 1
 
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmc_distribution": cmc}})
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc}})
         return card
