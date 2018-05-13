@@ -6,9 +6,9 @@ def parse(mana_string):
     costs = re.split(r"\}\{", mana_string[1:-1])
 
     for c in costs:
-        if re.match(r"\d+", c) is None:
-            mana[c] = mana[c] + 1
-        else:
+        if re.match(r"\d+", c) is not None:
             mana["colorless"] = mana["colorless"] + int(c)
+        elif re.match(r"W|B|U|R|G", c) is not None:
+            mana[c] = mana[c] + 1
 
     return mana
