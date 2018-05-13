@@ -13,6 +13,8 @@ class TestStatistics(unittest.TestCase):
         import_cards("XLN-x.json", cls.dao)
 
     def setUp(self):
+        self.dao.drop_decks()
+
         name = "Chaos is Standard"
         self.deck_id = self.dao.create_deck(name)
 
@@ -26,9 +28,6 @@ class TestStatistics(unittest.TestCase):
         self.dao.add_card_to_deck(self.deck_id, self.card_id1)
         self.dao.add_card_to_deck(self.deck_id, self.card_id2)
         self.dao.add_card_to_deck(self.deck_id, self.card_id3)
-
-    def tearDown(self):
-        self.dao.drop_decks()
 
     def test_cmc_distribution(self):
         # Anointed Deacon
