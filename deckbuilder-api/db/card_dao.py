@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from db.entities.card_entity import CardEntity
 from db.entities.deck_entity import DeckEntity
 from errors.errors import DeckNotFoundError, CardNotFoundError
+from util import mana_parser
 
 
 class CardDao:
@@ -66,7 +67,7 @@ class CardDao:
         if card is None:
             raise CardNotFoundError(card_id)
         cards = list(deck["cards"])
-        new_card = CardEntity(card_id, card["name"], card["mciUrl"], card["cmc"])
+        new_card = CardEntity(card_id, card["name"], card["mciUrl"], card["cmc"], card["manaCost"])
         cards.append(new_card.__dict__)
 
         # Update the CMC distribution
@@ -75,7 +76,15 @@ class CardDao:
         cmc_count = cmc.get(str(cmc_card), 0)
         cmc[str(cmc_card)] = cmc_count + 1
 
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc}})
+        # Update the Mana Color distribution
+        mana_distribution_deck = deck["manaDistribution"]
+        mana_distribution_card = card["manaCost"]
+        cost = mana_parser.parse(mana_distribution_card)
+
+        for key, value in mana_distribution_deck.items():
+            mana_distribution_deck[key] = value + cost[key]
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc, "manaDistribution": mana_distribution_deck}})
 
     def delete_card_from_deck(self, deck_id, card_id):
         # First finding the deck
@@ -101,5 +110,13 @@ class CardDao:
         cmc_count = cmc.get(str(cmc_card), 0)
         cmc[str(cmc_card)] = cmc_count - 1
 
-        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc}})
+        # Update the man cost distribution
+        mana_distribution_deck = deck["manaDistribution"]
+        mana_distribution_card = card["manaCost"]
+        cost = mana_parser.parse(mana_distribution_card)
+
+        for key, value in mana_distribution_deck.items():
+            mana_distribution_deck[key] = value - cost[key]
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc, "manaDistribution": mana_distribution_deck}})
         return card

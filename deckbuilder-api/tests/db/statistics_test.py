@@ -50,7 +50,7 @@ class TestStatistics(unittest.TestCase):
         cmc_count = cmc.get("5", 0)
         self.assertEqual(1, cmc_count)
 
-    @unittest.skip("Not yet implemented")
+    #@unittest.skip("Not yet implemented")
     def test_mana_color_distribution(self):
         deck = self.dao._decks.find_one({"id": self.deck_id})
         mana = deck["manaDistribution"]
