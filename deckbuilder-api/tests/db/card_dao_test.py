@@ -10,13 +10,10 @@ class TestCardDao(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.dao = CardDao("test_db")
+        cls.dao.drop_db()
         import_cards("XLN-x.json", cls.dao)
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.dao.drop_db()
-
-    def tearDown(self):
+    def setUp(self):
         self.dao.drop_decks()
 
     def test_create_deck(self):
@@ -101,3 +98,33 @@ class TestCardDao(unittest.TestCase):
 
         with self.assertRaises(CardNotFoundError):
             self.dao.delete_card_from_deck(deck_id, card_id)
+
+    def test_card_tags(self):
+        deck_name = "Mardu Moon"
+        deck_id = self.dao.create_deck(deck_name)
+        # Vona, Butcher of Magan
+        card_id = "aa882bc018277cc70b06e643cd963360e590cc02"
+        self.dao.add_card_to_deck(deck_id, card_id)
+
+        card = self.dao.get_card_from_deck(deck_id, card_id)
+        self.assertEqual(0, len(card["tags"]), "New card should have 0 tags")
+
+        # Add tags
+        tags = ["manaSource", "ramp", "creature"]
+        self.dao.add_tags_to_card(deck_id, card_id, tags)
+
+        card = self.dao.get_card_from_deck(deck_id, card_id)
+        tags = card["tags"]
+        self.assertEqual(3, len(tags), "Wrong number of tags")
+        self.assertTrue("manaSource" in tags)
+        self.assertTrue("ramp" in tags)
+        self.assertTrue("creature" in tags)
+
+        # Delete tags
+        tags_to_delete = ["ramp", "creature"]
+        self.dao.delete_tags_from_card(deck_id, card_id, tags_to_delete)
+
+        card = self.dao.get_card_from_deck(deck_id, card_id)
+        tags = card["tags"]
+        self.assertEqual(1, len(tags), "Wrong number of tags")
+        self.assertTrue("manaSource" in tags)

@@ -48,6 +48,16 @@ def delete_deck(deck_id):
     return jsonify(_deck)
 
 
+@app.route('/deck/<deck_id>/card/<card_id>', methods=['GET'])
+def get_card_from_deck(deck_id, card_id):
+    card_id = request.form["card_id"]
+    try:
+        result = dao.get_card_from_deck(deck_id, card_id)
+    except Error as e:
+        return e.message, e.status_code
+    return jsonify(result)
+
+
 @app.route('/deck/<deck_id>/card', methods=['POST'])
 def add_card_to_deck(deck_id):
     card_id = request.form["card_id"]
@@ -62,6 +72,26 @@ def add_card_to_deck(deck_id):
 def delete_card_from_deck(deck_id, card_id):
     try:
         dao.delete_card_from_deck(deck_id, card_id)
+    except Error as e:
+        return e.message, e.status_code
+    return card_id
+
+
+@app.route('/deck/<deck_id>/card/<card_id>/tags', methods=['POST'])
+def add_tags_to_card(deck_id, card_id):
+    tags = request.form["tags"]
+    try:
+        dao.add_tags_to_card(deck_id, card_id, tags)
+    except Error as e:
+        return e.message, e.status_code
+    return card_id
+
+
+@app.route('/deck/<deck_id>/card/<card_id>/tags', methods=['DELETE'])
+def delete_tags_from_card(deck_id, card_id):
+    tags = request.form["tags"]
+    try:
+        dao.delete_tags_from_card(deck_id, card_id, tags)
     except Error as e:
         return e.message, e.status_code
     return card_id

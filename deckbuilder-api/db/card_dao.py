@@ -59,6 +59,15 @@ class CardDao:
         self._decks.delete_one({"id": deck_id})
         return deck
 
+    def get_card_from_deck(self, deck_id, card_id):
+        deck = self._decks.find_one({"id": deck_id})
+        if deck is None:
+            raise DeckNotFoundError(deck_id)
+        for card in deck["cards"]:
+            if card["id"] == card_id:
+                return card
+        raise CardNotFoundError(card_id)
+
     def add_card_to_deck(self, deck_id, card_id):
         deck = self._decks.find_one({"id": deck_id})
         if deck is None:
@@ -120,3 +129,46 @@ class CardDao:
 
         self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards, "cmcDistribution": cmc, "manaDistribution": mana_distribution_deck}})
         return card
+
+    def add_tags_to_card(self, deck_id, card_id, tags):
+        deck = self._decks.find_one({"id": deck_id})
+        cards = list(deck["cards"])
+
+        found_card = False
+        for card in cards:
+            if card["id"] != card_id:
+                continue
+
+            found_card = True
+            # We do not want to add duplicate tags, so first convert the tags to a set, which cannot contain duplicates
+            card_tags = card["tags"]
+            card_tags.extend(tags)
+            card["tags"] = list(set(card_tags))
+            break
+
+        if not found_card:
+            raise CardNotFoundError(card_id)
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
+
+    def delete_tags_from_card(self, deck_id, card_id, tags_to_delete):
+        deck = self._decks.find_one({"id": deck_id})
+        cards = list(deck["cards"])
+
+        found_card = False
+        for card in cards:
+            if card["id"] != card_id:
+                continue
+
+            found_card = True
+            card_tags = card["tags"]
+            for tag_to_delete in tags_to_delete:
+                card_tags.remove(tag_to_delete)
+
+            card["tags"] = card_tags
+            break
+
+        if not found_card:
+            raise CardNotFoundError(card_id)
+
+        self._decks.update_one({"id": deck_id}, {"$set": {"cards": cards}})
