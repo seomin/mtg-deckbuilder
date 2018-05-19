@@ -1,7 +1,4 @@
-import re
 import uuid
-
-from pymongo import MongoClient
 
 from db.entities.card_entity import CardEntity
 from db.entities.deck_entity import DeckEntity
@@ -9,31 +6,13 @@ from errors.errors import DeckNotFoundError, CardNotFoundError
 from util import mana_parser
 
 
-class CardDao:
-    def __init__(self, db_name):
-        self.db_name = db_name
-        self._client = MongoClient()
-        self._db = self._client[db_name]
-        self._all_cards = self._db.all_cards
-        self._decks = self._db.decks
-
-    def drop_db(self):
-        self._client.drop_database(self.db_name)
-
-    def drop_cards(self):
-        self._all_cards.drop()
+class DeckOperations:
+    def __init__(self, db):
+        self._all_cards = db.all_cards
+        self._decks = db.decks
 
     def drop_decks(self):
         self._decks.drop()
-
-    def save_card(self, card):
-        self._all_cards.insert_one(card)
-
-    def search_cards(self, search):
-        if len(search) == 0:
-            return list()
-        cards = self._all_cards.find({"name": re.compile(search, re.IGNORECASE)}, {"_id": 0})
-        return list(cards)
 
     def create_deck(self, name):
         deck_id = str(uuid.uuid4())

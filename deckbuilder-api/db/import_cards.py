@@ -1,13 +1,12 @@
 import json
 import os
-from db.card_dao import CardDao
 
 mci_base_url = "https://magiccards.info/scans/en/"
 
 
-def import_cards(file_name, dao):
+def import_cards(file_name, card_operations):
     print("Dropping all cards...")
-    dao.drop_cards()
+    card_operations.drop_cards()
 
     print("Loading cards from json file...")
     script_dir = os.path.dirname(__file__)
@@ -29,7 +28,7 @@ def import_cards(file_name, dao):
                     if mci_number is not None:
                         card["mciUrl"] = mci_base_url + mci_set + "/" + mci_number + ".jpg"
 
-                dao.save_card(card)
+                card_operations.save_card(card)
         print("Done.")
 
 
