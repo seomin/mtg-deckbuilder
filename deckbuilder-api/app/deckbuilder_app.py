@@ -148,7 +148,6 @@ def reveal(deck_id):
 
 
 def run():
-    # dao.drop_db()
-    # import_cards("AllSets-x.json", dao)
+    # import_cards("AllSets-x.json", card_operations)
     app.run()
 
